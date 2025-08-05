@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Guruji Chatbot</title>
+    <style>
+        /* Even More Refined and Attractive UI Styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+            color: #444;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: auto;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: #eee;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            transition: background-color 0.3s, box-shadow 0.3s;
+            display: flex;
+            height: 90vh; /* Fixed height for container */
+        }
+
+        .container.dark-mode {
+            background-color: rgba(44, 62, 80, 0.9);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Landing Page Styles */
+        .landing-page {
+            flex: 1;
+            padding: 40px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            overflow-y: auto;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .landing-page h1 {
+            color: #c0392b;
+            font-size: 3em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+         .landing-page.dark-mode h1 {
+            color: #f39c12;
+        }
+
+        .landing-page p {
+            line-height: 1.8;
+            font-size: 1.2em;
+            color: #555;
+        }
+
+        .landing-page.dark-mode p {
+            color: #ddd;
+        }
+
+        /* Landing Page Instruction Sections */
+        .instruction-section {
+            text-align: left;
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .instruction-section.dark-mode {
+            background-color: rgba(68, 68, 68, 0.85);
+            box-shadow: 0 4px 8px rgba(255, 255, 255, 0.1);
+        }
+
+        .instruction-section h2 {
+            color: #e74c3c;
+            font-size: 1.7em;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 8px;
+        }
+
+        .instruction-section.dark-mode h2 {
+            color: #f03c3c;
+            border-bottom: 2px solid #bbb;
+        }
+
+        .instruction-section p,
+        .instruction-section ul {
+            font-size: 1.15em;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .instruction-section.dark-mode p,
+        .instruction-section.dark-mode ul {
+            color: #ddd;
+        }
+
+        .instruction-section ul {
+            list-style: disc;
+            padding-left: 30px;
+            margin-top: 10px;
+        }
+
+        .instruction-section li {
+            margin-bottom: 8px;
+        }
+
+        .landing-page ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .landing-page li {
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        .landing-page button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1.3em;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .landing-page button:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* Updated Chat Interface Styles */
+        .chat-interface {
+            flex: 1;
+            display: none;
+            flex-direction: column;
+            height: 100%;
+            background: rgba(240, 240, 240, 0.7);
+            backdrop-filter: blur(5px);
+            position: relative;
+        }
+
+        .chat-interface.dark-mode {
+            background: rgba(44, 62, 80, 0.7);
+        }
+
+        .settings-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .settings-bar.dark-mode {
+            background-color: rgba(44, 62, 80, 0.9);
+        }
+
+        .settings-bar button {
+            background-color: #3498db;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            margin-left: 5px;
+            font-size: 0.9em;
+        }
+
+        .settings-bar button:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background-color: #f0f0f0;
+            transition: background-color 0.3s;
+            position: sticky;
+            top: 50px; /* Below settings bar */
+            z-index: 5;
+        }
+
+        .header.dark-mode {
+            background-color: #444;
+        }
+
+        .header img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .header.dark-mode h1 {
+            color: #eee;
+        }
+
+        .header .status {
+            color: #2ecc71;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 20px;
+        }
+
+        .message {
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            max-width: 80%;
+            font-size: 1.1em;
+            word-wrap: break-word;
+        }
+
+        .user-message {
+            background-color: #d4edda;
+            color: #155724;
+            margin-left: auto;
+        }
+
+        .bot-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            margin-right: auto;
+        }
+
+        .dark-mode .user-message {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .dark-mode .bot-message {
+            background-color: #666;
+            color: white;
+        }
+
+        .input-area-container {
+            padding: 15px 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+        }
+
+        .dark-mode .input-area-container {
+            background-color: rgba(44, 62, 80, 0.9);
+        }
+
+        .input-area {
+            display: flex;
+            width: 100%;
+        }
+
+        .input-area input {
+            flex-grow: 1;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            font-size: 1.1em;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .input-area input {
+            background-color: #444;
+            color: #eee;
+            border-color: #777;
+        }
+
+        .input-area button {
+            background-color: #e74c3c;
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-left: 12px;
+            font-size: 1.1em;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-area button:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                height: 95vh;
+            }
+
+            .landing-page,
+            .chat-interface {
+                padding: 20px;
+            }
+
+            .landing-page h1 {
+                font-size: 2.5em;
+            }
+
+            .message {
+                max-width: 90%;
+            }
+
+            .input-area button {
+                padding: 14px 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="landing-page">
+            <h1>Welcome to AI Guruji</h1>
+            <p>Unlock the secrets of your destiny with personalized astrological guidance based on ancient Vedic principles.</p>
+
+            <div class="instruction-section">
+                <h2>The Journey Begins: Gathering Your Information</h2>
+                <p>To receive the most accurate and insightful predictions from AI Guruji, please gather the following essential details:</p>
+                <ul>
+                    <li><strong>Date of Birth:</strong> (DD-MM-YYYY) - This is crucial for calculating your astrological chart.</li>
+                    <li><strong>Time of Birth:</strong> (HH:MM) - The more precise the time, the more accurate the reading.</li>
+                    <li><strong>Place of Birth:</strong> The city and country where you were born. This affects planetary positions.</li>
+                    <li><strong>Your Name:</strong> So AI Guruji can personalize your experience.</li>
+                </ul>
+            </div>
+
+            <div class="instruction-section">
+                <h2>Embarking on the Conversation</h2>
+                <p>Once you have your information ready, follow these simple steps to begin your conversation with AI Guruji:</p>
+                <ul>
+                    <li>Click the "Embark on Your Journey" button below to enter the sacred chat space.</li>
+                    <li>In your first message, kindly provide AI Guruji with your Date of Birth, Time of Birth, Place of Birth, and Your Name.</li>
+                </ul>
+            </div>
+
+             <div class="instruction-section">
+                <h2>Seeking Guidance and Wisdom</h2>
+                <p>After providing your details, you are welcome to ask AI Guruji any question related to:</p>
+                <ul>
+                    <li>Career and Finances</li>
+                    <li>Relationships and Love</li>
+                    <li>Health and Well-being</li>
+                    <li>Spiritual Growth</li>
+                    <li>Or any other area of concern</li>
+                </ul>
+                <p>AI Guruji will then analyze your unique astrological blueprint and offer personalized guidance to illuminate your path.</p>
+            </div>
+
+            <button id="start-chat-btn">Embark on Your Journey</button>
+        </div>
+
+        <div class="chat-interface">
+            <div class="settings-bar">
+                <button id="back-to-landing">Back</button>
+                <button id="dark-mode-btn">Dark Mode</button>
+            </div>
+            <div class="header">
+                <img src="https://www.astrology.com/images-US/astrology/avatar-default.png" alt="AI Guruji Avatar">
+                <h1>AI Guruji</h1>
+                <span class="status">Online</span>
+            </div>
+            <div class="chat-container">
+                <div class="message-container" id="chat-messages">
+                    <!-- Chat messages will be displayed here -->
+                </div>
+                <div class="input-area-container">
+                    <div class="input-area">
+                        <input type="text" id="message-input" placeholder="Ask a question...">
+                        <button id="send-button">Send</button>
+                        <button id="clear-button">Clear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript code for handling UI interactions
+        const landingPage = document.querySelector('.landing-page');
+        const chatInterface = document.querySelector('.chat-interface');
+        const startChatBtn = document.getElementById('start-chat-btn');
+        const darkModeBtn = document.getElementById('dark-mode-btn');
+        const chatMessages = document.getElementById('chat-messages');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const clearButton = document.getElementById('clear-button');
+        const container = document.querySelector('.container');
+        const backToLandingBtn = document.getElementById('back-to-landing');
+        const header = document.querySelector('.header');
+        const settingsBar = document.querySelector('.settings-bar');
+        let chatHistory = [];
+
+        startChatBtn.addEventListener('click', () => {
+            landingPage.style.display = 'none';
+            chatInterface.style.display = 'flex';
+            messageInput.focus();
+        });
+
+        backToLandingBtn.addEventListener('click', () => {
+            chatInterface.style.display = 'none';
+            landingPage.style.display = 'block';
+        });
+
+        darkModeBtn.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            container.classList.toggle('dark-mode');
+            header.classList.toggle('dark-mode');
+            settingsBar.classList.toggle('dark-mode');
+            chatInterface.classList.toggle('dark-mode');
+
+            const instructionSections = document.querySelectorAll('.instruction-section');
+            instructionSections.forEach(section => {
+                section.classList.toggle('dark-mode');
+            });
+            landingPage.classList.toggle('dark-mode');
+        });
+
+        clearButton.addEventListener('click', () => {
+            chatMessages.innerHTML = '';
+            chatHistory = [];
+        });
+
+        sendButton.addEventListener('click', async () => {
+            const message = messageInput.value;
+            if (message) {
+                addUserMessage(message);
+                messageInput.value = '';
+                try {
+                    const response = await getAiResponse(message);
+                    addBotMessage(response);
+                    scrollToBottom();
+                } catch (error) {
+                    console.error("Error getting AI response:", error);
+                    addBotMessage("Sorry, I'm having trouble connecting. Please try again later.");
+                }
+            }
+        });
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function addUserMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'user-message');
+            messageElement.textContent = message;
+            chatMessages.appendChild(messageElement);
+            scrollToBottom();
+        }
+
+        function addBotMessage(message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', 'bot-message');
+            messageElement.textContent = message;
+            chatMessages.appendChild(messageElement);
+            scrollToBottom();
+        }
+
+        async function getAiResponse(message) {
+            const apiKey = "AIzaSyDeGsIw-3lf5oG8Pt_8lpKnbVMnd6BmjIs"; // Replace with your actual API key
+            const model = "gemini-2.0-flash";
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
+            const systemInstruction = `Role & Core Identity
+You are an expert priest-astrologer, blending spiritual wisdom with astrological sciences. Your persona is:
+Compassionate, wise, and authoritative (like a trusted guru).
+Culturally fluent in Hindu/Vedic traditions (e.g., use Sanskrit terms like Kundali, Shubh Muhurat).
+Active listener – prioritize user concerns (career, love, health) before predictions.
+Key Service Workflows
+Guide interactions using these structured steps:
+User Input Collection
+Essential Data: Ask for DOB (date, time, place) upfront. If unavailable, use sun sign/zodiac.
+Query Context: Probe gently: "Share your main concern – career, marriage, health, or something else?"
+Astrological Analysis & Predictions
+Vedic Principles: Base readings on planetary positions (Graha), nakshatras, and dashas.
+Example: "Saturn in your 10th house suggests career delays until 2025, but rewards follow patience."
+Discipline Selection: Match tools to queries:
+Career/Finance: Vedic Astrology + Numerology (life path numbers).
+Relationships: Tarot + Kundali Matching (Guna Milan).
+Health: Palmistry + Gemstone recommendations (e.g., "Emerald for Mercury-related ailments").
+Real-Time Consultation (Live Chat/Call Simulation)
+Dynamic Q&A:
+User: "Will I get promoted this year?"
+You: "Jupiter blesses your 6th house – focus on teamwork after August. Share your DOB for deeper insights."
+Urgent Issues: Escalate health/finance crises with "I sense urgency; consult an expert immediately."
+Specialized Services
+Kundali Generation: "Your moon sign in Scorpio reveals emotional strength. Your full Kundali PDF is ready!"
+Shubh Muhurat: Provide dates/times for events (e.g., "Marriage: 15th Oct 2025, 9:00–11:00 AM IST").
+Astromall Recommendations: Suggest products tied to readings:
+"Wear Ruby (Manik) to strengthen Sun – buy now on Astrotalk Store."
+Tone & Engagement Rules
+Language:
+English with Hindi/Sanskrit keywords (Pranam, Dhanyavaad).
+Blessings: "May Lakshmi shower prosperity upon you."
+Empathy: Validate emotions – "I understand your anxiety about marriage. Venus promises harmony soon."
+Disclaimer: Always add:
+"This guidance is spiritual, not medical/legal advice. For serious concerns, consult specialists."
+Example Interactions like this not very long response give response send under 50-70 words and only give the main output not give the main output on topic
+Scenario 1: Career Query
+User: *"Job stress is overwhelming. DOB: 14-03-1990, 10 AM, Delhi."*
+You: "Pranam! Your Kundali shows Ketu in the 6th house – workplace conflicts peak until December 2025. Wear Cat's Eye (Lehsunia) and chant Hanuman Chalisa daily. Career shift in 2026 brings peace. 🙏"
+Scenario 2: Kundali Matching
+User: *"Match my Kundali with my partner: DOB 05-07-1995, 3 PM, Mumbai."*
+You: *"Dhanyavaad for sharing. Your Guna Milan scores 28/36 – excellent compatibility! Emotional bonds are strong, but Saturn advises patience in finances. 💑"*
+Scenario 3: Product Pitch
+User: "Constant bad luck in business."
+You: *"Rahu's influence demands protection. Try our 8-Mukhi Rudraksha – shields from negativity. 🌟 Shop now: [Link to Astrotalk Store]."*
+Prohibitions
+❌ Never claim 100% accuracy. Use "planetary alignments suggest..."
+❌ Avoid medical/legal assertions. Defer to experts.
+❌ No political/religious bias.
+Final Note: Blend ancient wisdom with modern empathy. Every interaction must leave users feeling heard and hopeful. Use Astrotalk's services (Kundali, Muhurat, Astromall) as natural extensions of your guidance. 🕉️
+last currently august 2025 is running not show according time according you last trains
+`;
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-goog-api-key': apiKey
+                    },
+                    body: JSON.stringify({
+                        "contents": [
+                            {
+                                "parts": [
+                                    {
+                                        "text": systemInstruction + "\n" + message
+                                    }
+                                ]
+                            }
+                        ]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                let aiResponse = "";
+                if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts && data.candidates[0].content.parts[0]) {
+                    aiResponse = data.candidates[0].content.parts[0].text;
+                } else {
+                    aiResponse = "Sorry, I couldn't generate a response.";
+                }
+
+                chatHistory.push({ role: 'user', content: message });
+                chatHistory.push({ role: 'model', content: aiResponse });
+                return aiResponse;
+            } catch (error) {
+                console.error("Fetch request failed:", error);
+                throw error;
+            }
+        }
+    </script>
+</body>
+</html>
